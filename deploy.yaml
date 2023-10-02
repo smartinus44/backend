@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+        - name: demo
+          image: java-quarkus-image:latest
+          ports:
+            - name: http
+              containerPort: 8082
+              protocol: TCP
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-svc
+spec:
+ports:
+  - name: http-8082
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+selector:
+  app: demo-app
